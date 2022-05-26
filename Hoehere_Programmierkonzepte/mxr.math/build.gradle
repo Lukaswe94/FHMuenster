@@ -1,0 +1,25 @@
+/*
+ * @author N. Wulff
+ */
+
+plugins {
+    id 'java-library'
+	id 'cpp'
+}
+
+dependencies {
+    api project(':mxr.core')
+    api project(':mxr.engine')
+}
+
+test {
+	systemProperty "java.library.path", file("${buildDir}/libs/mxr_math/shared").absolutePath
+}
+
+model {
+	components {
+		mxr_math(NativeLibrarySpec)
+	}
+}
+test.dependsOn 'mxr_mathSharedLibrary'
+

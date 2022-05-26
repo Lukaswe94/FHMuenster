@@ -1,0 +1,121 @@
+/*
+ * Modified build script by N. Wulff
+ */
+
+// Source: https://plugins.gradle.org/plugin/org.javamodularity.moduleplugin
+// Source: https://github.com/java9-modularity/gradle-modules-plugin
+
+
+plugins {
+    id 'java'
+    id 'org.javamodularity.moduleplugin' version '1.8.10' apply false
+}
+
+dependencies {
+	implementation project(':mxr.core')
+	implementation project(':mxr.engine')
+	implementation project(':mxr.client')
+	implementation project(':mxr.linearalgebra')
+	implementation project(':mxr.math')
+}
+
+java {
+
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(16)
+	}
+}
+
+
+
+allprojects  {
+	apply plugin: 'java-library'
+	apply plugin: 'maven-publish'
+	group = 'de.lab4inf.mxr'
+	version = '1.0.0'
+	
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		jcenter() 
+	}
+	dependencies {
+		// Use JUnit Jupiter API for testing.
+		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+		// Use JUnit Jupiter Engine for testing.
+		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+	   	
+	}
+	test {
+		// Use junit platform for unit tests
+		useJUnitPlatform()
+		testLogging {
+			events "passed", "skipped", "failed", "STANDARD_OUT"
+		}
+
+	}
+	repositories {
+		mavenLocal()
+	}
+} // allprojects
+
+subprojects  {
+	apply plugin: "org.javamodularity.moduleplugin" 
+	plugins.withType(JavaPlugin).configureEach {
+		java {
+			sourceCompatibility = JavaVersion.VERSION_16
+			targetCompatibility = JavaVersion.VERSION_16
+			modularity.inferModulePath = true
+			
+		   // withJavadocJar()
+		   // withSourcesJar()
+		}
+		compileJava {
+			options.compilerArgs << '-Xlint:unchecked'
+		}
+		compileTestJava {
+			options.compilerArgs << '-Xlint:unchecked'
+		}
+	
+	}
+	publishing {
+		publications {
+			 mavenJava(MavenPublication) {
+				artifactId = project.name
+				from components.java
+				 versionMapping {
+					usage('java-api') {
+						fromResolutionOf('runtimeClasspath')
+					}
+					usage('java-runtime') {
+						fromResolutionResult()
+					}
+				}
+			 
+				pom {
+					name = 'mxr'
+					description = 'A Mops eXtendable Runtime MXR'
+					url = 'http://www.lab4inf.fh-muenster.de/MXR'
+					licenses {
+						license {
+							name = 'The Apache License, Version 2.0'
+							url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+						}
+					}
+					developers {
+						developer {
+							id = 'nwulff'
+							name = 'Nikolaus Wulff'
+							email = 'nwulff@fh-muenster.de'
+						}
+					}
+					scm {
+						connection = 'scm:git:git://git.fh-muenster.de/ci-hpk'
+						developerConnection = 'scm:git:ssh://https://git.fh-muenster.de/ci-hpk'
+						url = 'http://www.lab4inf.fh-muenster.de/MXR/'
+					}
+				} // pom
+			} // mavenJava
+		} // publications
+	} // publishing
+} // subproject

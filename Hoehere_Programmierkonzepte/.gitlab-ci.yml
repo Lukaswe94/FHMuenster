@@ -1,0 +1,53 @@
+image: git.fh-muenster.de:4567/winter/hpk2021-docker
+# image: gradle:7.2.0-jdk17
+# image: gradle:7.2.0-jdk16
+# image: gradle:6.6.1-jdk11
+# =========================================================== #
+# GitLab CI/CD configuration of N. Wulff for HPK-WiSe21/22    #
+# =========================================================== #
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - deploy
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script: gradle --build-cache build -x test
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - gradle
+      - .gradle
+
+unit-test-job:   # This job runs in the test stage.
+  stage: test
+  script: gradle test
+  artifacts:   # export test-results to GitLab
+    reports:
+      junit: 
+        -  mxr.core/build/test-results/test/TEST-*.xml  
+        -  mxr.engine/build/test-results/test/TEST-*.xml  
+        -  mxr.client/build/test-results/test/TEST-*.xml 
+        -  mxr.linearalgebra/build/test-results/test/TEST-*.xml   
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - gradle
+      - .gradle
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application (at present a dummy task)"
+    - echo "Application successfully deployed."
