@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct string {
+    size_t len;
+    size_t pos;
+    char* str;
+};
+typedef struct string string;
+
+
+/** Eigene Implementierung der strcat Funktion.
+ * 
+ * @param dest - String Struktur, wo angehaengt werden soll.
+ * @param src - der anzuhaengende string.
+ * @param len - die laenge von src (ohne das 0-Byte).
+ * @return 
+ */
+string *str_cat(string *dest, const char *src, size_t len) {
+    int i = 0, r = 0;
+
+    // Muss der Speicher vergroessert werden?
+    if(((dest->len - 1) - dest->pos) < len) {
+
+        dest->str = realloc(dest->str, (dest->len + len));
+        if(dest->str == NULL) {
+            puts("Fehler in str_cat \nrealloc ist fehlgeschlagen \n");
+            exit(2);
+        }
+        dest->len = dest->len + len;
+    }
+
+    // +1, da ansonsten das letzte Zeichen von dest-str ueberschrieben wird.
+    r = (int)dest->pos + 1;
+    
+    for(i = 0; i < len; i++) {
+        dest->str[r + i] = src[i];
+    }
+
+    dest->pos = dest->pos + len;
+    return dest;
+}
+
+int main(void) {
+    char *tmp = "Welt";
+
+    string *test;
+    test = calloc(1, sizeof(string));
+    if(test == NULL) {
+        exit(2);
+    }
+
+    test->str = calloc(1024, sizeof(char));
+    if(test->str == NULL) {
+        exit(2);
+    }
+
+    test->len = 6;
+    test->pos = 4;
+    
+    test->str[0] = 'H';
+    test->str[1] = 'a';
+    test->str[2] = 'l';
+    test->str[3] = 'l';
+    test->str[4] = 'o';
+
+    test = str_cat(test, tmp, 4);
+
+    puts(test->str);
+
+    free(test->str);
+    free(test);
+    return 0;
+}

@@ -1,0 +1,32 @@
+Projektplan pse pg1,4
+
+TODO:
+1. Praktikum
+- [x] Projektplan mit Aufteilung
+- [x] str_cat implementieren 
+  - [x] realloc Funktion
+  - [x] ist der Buffer groß genug für den Anhang?
+- [x] Anfrage ändern mit
+  - [x] Burp-suit 
+  - [x] Debugger
+
+Praktikum 2 (22.04)
+- [x] Die GET-Line (erste Zeile) auf Richtikkeit prüfen  [10.04|Kai] 
+- [x] Die HTTP-Ressource aus der request auslesen        [13.04|Jannick]
+- [x] URL-decoder funktion schreiben                     [15.04|Jannick]
+- [ ] DocumentRoot anlegen                               [15.04|...]
+- [x] realpath funktion implementiren                    [20.04|Kai]
+- [ ] Upper/lowercase handler                            [20.04|Tim]
+- [ ] generell response/request schreiben                [20.04|...]
+- [ ] zusammenführung                                    [21.04|Gruppe]
+
+Praktikum 3 (05.05)
++ [ ] Host auswerten (Tim)
++ [ ] Jeder säubert seinen Kram
++ [ ] Noch mal Valgrind
++ [ ] String Funktionen ersetzen (Tim)
+  + [ ] !itoa
++ [ ] wird malloc benutzt? (Kai)
++ [ ] Python Test schreiben (Kai)
+
+(Wenn nicht HTTP konform gefragt wird, sprich GETL statt GET, muss trozdem HTTP Konform geantwortet werden.)

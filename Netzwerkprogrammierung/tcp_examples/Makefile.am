@@ -1,0 +1,9 @@
+AUTOMAKE_OPTIONS                 = subdir-objects
+bin_PROGRAMS                     = tcp_client server daytime_server discard_server thread_based_echo_server getaddresses chargen_server
+tcp_client_SOURCES               = tcp_client.c ../udp_examples/Socket.c
+server_SOURCES                   = server.c ../udp_examples/Socket.c
+daytime_server_SOURCES           = daytime_server.c ../udp_examples/Socket.c
+discard_server_SOURCES           = discard_server.c ../udp_examples/Socket.c
+thread_based_echo_server_SOURCES = thread_based_echo_server.c ../udp_examples/Socket.c
+getaddresses_SOURCES = getaddresses.c
+chargen_server_SOURCES = chargen_server.c ../udp_examples/Socket.c
